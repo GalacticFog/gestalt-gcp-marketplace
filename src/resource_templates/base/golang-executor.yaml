@@ -1,0 +1,19 @@
+name: golang-executor
+description: The golang runtime executor
+resource_type: Gestalt::Configuration::Provider::Lambda::Executor::GoLang
+properties:
+  config:
+    env:
+      public:
+        CMD: bin/gestalt-laser-executor-golang
+        IMAGE: '#{Config GOLANG_EXECUTOR_IMAGE}'
+        MIN_COOL: '0'
+        NAME: golang
+        RUNTIME: golang
+        SIZES_0_MIN_COOL: '#{Config GOLANG_EXECUTOR_0_MIN_COOL}'
+        SIZES_0_CPU: '#{Config EXECUTOR_SIZE_0_DEFAULT_CPU}'
+        SIZES_0_MEM: '#{Config EXECUTOR_SIZE_0_DEFAULT_MEM}'
+        SIZES_1_CPU: '#{Config EXECUTOR_SIZE_1_DEFAULT_CPU}'
+        SIZES_1_MEM: '#{Config EXECUTOR_SIZE_1_DEFAULT_MEM}'
+      private: {}
+  services: []

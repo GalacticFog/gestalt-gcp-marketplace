@@ -1,0 +1,19 @@
+name: ruby-executor
+description: The ruby runtime executor
+resource_type: Gestalt::Configuration::Provider::Lambda::Executor::Ruby
+properties:
+  config:
+    env:
+      public:
+        CMD: bin/gestalt-laser-executor-ruby
+        IMAGE: '#{Config RUBY_EXECUTOR_IMAGE}'
+        MIN_COOL: '0'
+        NAME: ruby
+        RUNTIME: ruby
+        SIZES_0_MIN_COOL: '0'
+        SIZES_0_CPU: '#{Config EXECUTOR_SIZE_0_DEFAULT_CPU}'
+        SIZES_0_MEM: '#{Config EXECUTOR_SIZE_0_DEFAULT_MEM}'
+        SIZES_1_CPU: '#{Config EXECUTOR_SIZE_1_DEFAULT_CPU}'
+        SIZES_1_MEM: '#{Config EXECUTOR_SIZE_1_DEFAULT_MEM}'
+      private: {}
+  services: []

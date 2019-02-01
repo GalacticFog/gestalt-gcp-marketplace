@@ -1,0 +1,107 @@
+name: gestalt
+namespace: gestalt-system
+
+common:
+  imagePullPolicy: Always
+  releaseVersion: 2.4
+
+secrets:
+  adminUser: 'admin'
+  adminPassword: 'gestaltgcp!'
+  databaseName: 'postgres'
+  databaseUsername: 'postgres'
+  databasePassword: 'a1b2c3d4!'
+
+installer:
+  image: gcr.io/galacticfog-public/gestalt/gestalt-installer:2.4
+
+security:
+  image: gcr.io/galacticfog-public/gestalt/gestalt-security:2.4
+  exposedServiceType: NodePort
+  hostname: gestalt-security.gestalt-system.svc.cluster.local
+  port: 9455
+  protocol: http
+  databaseName: gestalt-security
+
+rabbit:
+  image: gcr.io/galacticfog-public/gestalt/rabbit:2.4
+  hostname: gestalt-rabbit.gestalt-system
+  port: 5672
+  httpPort: 15672
+
+elastic:
+  image: gcr.io/galacticfog-public/gestalt/elasticsearch-docker:2.4
+  hostname: gestalt-elastic.gestalt-system
+  restPort: 9200
+  transportPort: 9300
+  initContainer:
+    image: gcr.io/galacticfog-public/gestalt/busybox:2.4
+
+meta:
+  image: gcr.io/galacticfog-public/gestalt/gestalt-meta:2.4
+  exposedServiceType: NodePort
+  hostname: gestalt-meta.gestalt-system.svc.cluster.local
+  port: 10131
+  protocol: http
+  databaseName: gestalt-meta
+  nodePort: 31111
+
+logging:
+  image: gcr.io/galacticfog-public/gestalt/gestalt-log:2.4
+  nodePort: 31114
+  hostname: gestalt-log.gestalt-system.svc.cluster.local
+  port: 80
+  protocol: http
+  ingress:
+    host: '/log' # will be added to the end of the ui.ingress.host
+
+ui:
+  image: gcr.io/galacticfog-public/gestalt:2.4
+  exposedServiceType: NodePort
+  port: 80
+  protocol: http
+  nodePort: 31112
+  hostname: gestalt-ui.gestalt-system.svc.cluster.local
+  ingress:
+    host: localhost
+    port: 80
+    protocol: http
+
+# Gestalt DB settings
+db:
+  # Hostname must be fully qualified
+  hostname: gestalt-postgresql.gestalt-system.svc.cluster.local
+  port: 5432
+  databaseName: postgres
+
+postgresql:
+  image: gcr.io/galacticfog-public/gestalt/postgres:2.4
+  existingSecret: 'gestalt-secrets'
+  secretKey:
+    database: 'db-database'
+    username: 'db-username'
+    password: 'db-password'
+  persistence:
+    size: 100Mi
+    storageClass: "standard"
+    subPath: "postgres"
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+  service:
+    port: 5432
+    type: ClusterIP
+
+redis:
+  image: gcr.io/galacticfog-public/gestalt/redis:2.4
+  hostname: gestalt-redis.gestalt-system
+  port: 6379
+  
+ubb:
+  image: gcr.io/galacticfog-public/gestalt/gestalt-ubb-agent:2.4
+  hostname: gestalt-ubb.gestalt-system
+  port: 6380
+
+trackingService:
+  image: gcr.io/galacticfog-public/gestalt/gestalt-tracking-service:2.4
